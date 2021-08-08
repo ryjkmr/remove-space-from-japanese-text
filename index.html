@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>remove unnecessary space from Japanese language document</title>
+</head>
+
+<body>
+  <H2>日本語文章から不要な空白を削除</H2>
+  <p>
+    PDFからのコピペやOCRしたテキストなどでよく見られる <br>
+    日本語文書中の不要な空白を削除します。<br>
+    例:「この Apple は」→「このAppleは」<br>
+    例:「図 1 に示す」「図1に示す」など
+  </p>
+  <p> 英文中の空白は無視します。<br>
+    「1.1 はじめに」のような章番号の後ろの空白も無視します。
+  </p>
+  <p>
+    ついでに行頭の空白を削除、「，」を「、」に変換します。
+  </p>
+  <p>
+    取り切れない部分もあります。<br>
+    やっていることは単純な置換の繰り返しなので、<br>
+    ご自分の変換したい文章に合わせて改造して下さい
+  </p>
+  <hr>
+
+  <p>元のテキストをペースト
+    <button id="clear">Clear</button>
+  </p>
+  <textarea name="" id="text_original" cols="60" rows="10">
+    １． 日本語文章から不要な空白を削除
+1.1　機能
+ PDF からのコピペや OCR した text などでよく見られる日本語文書中の不要な space を削除します。
+1-2　　英文には影響しない
+ This function does not affect to English sentence. 
+
+  </textarea><br>
+
+  <p>
+    <button id="replace">Replace</button>
+  </p>
+
+  <p>変換結果</p>
+  <textarea name="" id="text_result" cols="60" rows="10"></textarea><br>
+
+  <p>
+    <button id="copy">Copy to clipboard</button>
+  </p>
+
+
+  <script>
+    window.onload = function () {
+
+      document.getElementById("replace").addEventListener("click", function () {
+        const text_originnal = document.getElementById("text_original").value;
+
+        let result = text_originnal.replace(/^[ 　]+/gm, ''); //行頭のスペース削除
+
+        result = result.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function (s) {
+          return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+        }); //全角英数字を半角に
+
+        result = result.replace(/([．])/g, '.');//全角ピリオドを半角に
+        result = result.replace(/，/g, '、');//コンマを句点に
+
+        result = result.replace(/^([0-9\.\-]{2,})[ 　]+/gm, '$1\t');//章・節番号の後ろにタブを付ける
+        // mオプション：行頭（^）や行末（$）が各行の行頭・行末にもマッチする
+        result = result.replace(/ +([^0-9a-zA-Z])/g, '$1');//全角文字の前のスペースを除去
+        result = result.replace(/([^0-9a-zA-Z]) +/g, '$1');//全角文字の後ろのスペースを除去
+        document.getElementById("text_result").value = result;
+      }, false);
+
+
+      document.getElementById("clear").addEventListener("click", function () {
+        document.getElementById("text_original").value = "";
+      }, false);
+
+      document.getElementById("copy").addEventListener("click", function () {
+        const textarea = document.getElementById("text_result");
+        textarea.select();
+        document.execCommand("copy");
+      }, false);
+
+    };
+
+  </script>
+
+</body>
+
+</html>
