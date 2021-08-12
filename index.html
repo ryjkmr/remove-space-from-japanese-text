@@ -77,9 +77,9 @@
     window.onload = function () {
 
       document.getElementById("replace").addEventListener("click", function () {
-        const text_originnal = document.getElementById("text_original").value;
+        let result = document.getElementById("text_original").value;
 
-        let result = text_originnal.replace(/^[ 　]+/gm, ''); //行頭のスペース削除
+        result = result.replace(/^[ 　]+/gm, ''); //行頭のスペース削除
 
         result = result.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function (s) {
           return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
@@ -90,8 +90,8 @@
 
         result = result.replace(/^([0-9\.\-]{2,})[ 　]+/gm, '$1\t');//章・節番号の後ろにタブを付ける
         // mオプション：行頭（^）や行末（$）が各行の行頭・行末にもマッチする
-        result = result.replace(/ +([^0-9a-zA-Z])/g, '$1');//全角文字の前のスペースを除去
-        result = result.replace(/([^0-9a-zA-Z]) +/g, '$1');//全角文字の後ろのスペースを除去
+        result = result.replace(/ +([亜-熙ぁ-んァ-ヶ])/g, '$1');//全角文字の前のスペースを除去
+        result = result.replace(/([亜-熙ぁ-んァ-ヶ]) +/g, '$1');//全角文字の後ろのスペースを除去
 
         //他の変換も行いたい場合には適宜 result=result.replace() を追加する
 
