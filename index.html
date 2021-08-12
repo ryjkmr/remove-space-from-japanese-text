@@ -1,14 +1,29 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>remove unnecessary space from Japanese language document</title>
+  <title>日本語文章から不要な空白を削除</title>
+
+  <style>
+    html {
+      font-family: sans-serif;
+      font-size: 100%;
+    }
+
+    textarea,
+    button {
+      font-family: inherit;
+      font-size: 100%;
+    }
+  </style>
+
 </head>
 
 <body>
-  <H2>日本語文章から不要な空白を削除</H2>
+  <H1>日本語文章から不要な空白を削除</H1>
   <p>
     PDFからのコピペやOCRしたテキストなどでよく見られる <br>
     日本語文書中の不要な空白を削除します。<br>
@@ -19,6 +34,7 @@
     「1.1 はじめに」のような章番号の後ろの空白も無視します。
   </p>
   <p>
+    全角英数字は半角に変換します。
     ついでに行頭の空白を削除、「，」を「、」に変換します。
   </p>
   <p>
@@ -28,9 +44,9 @@
   </p>
   <hr>
 
-  <p>元のテキストをペースト
-    <button id="clear">Clear</button>
-  </p>
+  <h2>元のテキストをペースト</h2>
+  <p><button id="clear">Clear Sample Text</button></p>
+
   <textarea name="" id="text_original" cols="60" rows="10">
     １． 日本語文章から不要な空白を削除
 1.1　機能
@@ -38,17 +54,22 @@
 1-2　　英文には影響しない
  This function does not affect to English sentence. 
 
+ 1-3 全角英数字は半角に変換
+ ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ
+ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ
+０１２３４５６７８９
+
   </textarea><br>
 
   <p>
     <button id="replace">Replace</button>
   </p>
 
-  <p>変換結果</p>
+  <h2>変換結果</h2>
   <textarea name="" id="text_result" cols="60" rows="10"></textarea><br>
 
   <p>
-    <button id="copy">Copy to clipboard</button>
+    <button id="copy">Copy to Clipboard</button>
   </p>
 
 
@@ -71,6 +92,9 @@
         // mオプション：行頭（^）や行末（$）が各行の行頭・行末にもマッチする
         result = result.replace(/ +([^0-9a-zA-Z])/g, '$1');//全角文字の前のスペースを除去
         result = result.replace(/([^0-9a-zA-Z]) +/g, '$1');//全角文字の後ろのスペースを除去
+
+        //他の変換も行いたい場合には適宜 result=result.replace() を追加する
+
         document.getElementById("text_result").value = result;
       }, false);
 
